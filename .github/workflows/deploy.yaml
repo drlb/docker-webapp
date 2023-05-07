@@ -14,5 +14,5 @@ jobs:
         run: docker build -t cygnetops/web-app-test -f Dockerfile.dev .
       - name: Run tests
         run: docker run -e CI=true cygnetops/web-app-test npm test
-      - name: Generate deployment package
+      - name: Generate deployment package (zip)
         run: zip -r deploy.zip . -x '*.git*'
