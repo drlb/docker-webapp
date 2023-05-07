@@ -39,7 +39,7 @@ jobs:
       - name: Copy deployment package to local machine
         run: docker cp web-app-prod:/app/deploy.zip /home/wauser/
       
-      - name: Remove temporary web app test container
+      - name: Remove temporary web app prod container
         run: docker stop web-app-prod && docker rm web-app-prod
   
   deploy:

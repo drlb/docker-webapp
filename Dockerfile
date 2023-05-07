@@ -7,7 +7,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 RUN apk add zip
-RUN zip -r /app/deploy.zip /app/build/
+RUN cd /app/build && zip -r /app/deploy.zip .
 
 # Create nginx server and copy result of build folder [Run Phase]
 # FROM nginx
