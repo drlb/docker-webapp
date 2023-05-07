@@ -17,6 +17,9 @@ jobs:
       
       - name: Run tests
         run: docker run --name web-app-test -e CI=true cygnetops/web-app-test npm run test
+      
+      - name: Remove temporary web app test container
+        run: docker stop web-app-test && docker rm web-app-test
   
   build:
     runs-on: self-hosted
@@ -30,6 +33,9 @@ jobs:
       - name: Build Docker image
         run: docker build -t cygnetops/web-app-prod -f Dockerfile .
       
+      - name: Build deployment package
+        run: docker run -it -d --name web-app-prod -e CI=true cygnetops/web-app-prod npm run build
+
       - name: Copy deployment package to local machine
         run: docker cp web-app-prod:/app/deploy.zip /home/wauser/
       
