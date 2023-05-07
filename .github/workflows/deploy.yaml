@@ -39,7 +39,7 @@ jobs:
           username: ${{ secrets.NGINX_USERNAME }}
           password: ${{ secrets.NGINX_PASSWORD }}
           source: deploy.zip
-          target: /path/to/deploy.zip
+          target: /usr/share/nginx/html/deploy.zip
 
       - name: Extract deployment package on Nginx server container
         uses: appleboy/ssh-action@master
@@ -47,9 +47,7 @@ jobs:
           host: ${{ secrets.NGINX_HOST }}
           username: ${{ secrets.NGINX_USERNAME }}
           password: ${{ secrets.NGINX_PASSWORD }}
-          script: |
-            cd /usr/share/nginx/html
-            unzip -o deploy.zip -d /usr/share/nginx/html
+          script: cd /usr/share/nginx/html && unzip -o deploy.zip -d /usr/share/nginx/html
       
       - name: Restart Nginx service
         uses: appleboy/ssh-action@master
@@ -57,5 +55,4 @@ jobs:
           host: ${{ secrets.NGINX_HOST }}
           username: ${{ secrets.NGINX_USERNAME }}
           password: ${{ secrets.NGINX_PASSWORD }}
-          script: |
-            sudo service nginx restart
+          script: sudo service nginx restart
