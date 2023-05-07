@@ -5,11 +5,14 @@ on:
  
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: docker run --privileged -it login --username ${{ secrets.DOCKER_USERNAME }} --password-stdin ${{ secrets.DOCKER_PASSWORD }}
-      - run: docker build -t cygnetops/web-app-test -f Dockerfile.dev .
-      - run: docker run -e CI=true cygnetops/web-app-test npm test
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin docker.io
+      - name: Build Docker image
+        run: docker build -t cygnetops/web-app-test -f Dockerfile.dev .
+      - name: Run tests
+        run: docker run -e CI=true cygnetops/web-app-test npm test
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
