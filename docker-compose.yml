@@ -1,6 +1,6 @@
 version: '3'
 services:
-  web:
+  web_app_dev:
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -9,7 +9,7 @@ services:
     volumes:
       - /home/node/app/node_modules
       - .:/home/node/app
-  tests:
+  web_app_tests:
     build:
       context: .
       dockerfile: Dockerfile.dev
@@ -17,3 +17,9 @@ services:
       - /home/node/app/node_modules
       - .:/home/node/app
     command: ["npm", "run", "test"]
+  web_app_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
