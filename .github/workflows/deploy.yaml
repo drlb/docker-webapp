@@ -17,19 +17,15 @@ jobs:
       
       - name: Run tests
         run: docker run -e CI=true cygnetops/web-app-test npm run test
-        needs: build-docker-image
 
       - name: Create new build
         run: docker exec web-app-test npm run build
-        needs: run-tests
       
       - name: Generate deployment package zip file
         run: docker exec web-app-test apt-get install zip && zip -r /home/node/app/deploy.zip /home/node/app/build -x '*.git*'
-        needs: create-new-build
 
       - name: Copy deployment package to local machine
         run: docker cp web_app-web_app_server-1:/home/node/app/deploy.zip /home/wauser/
-        needs: generate-deployment-package-zip-file
 
   deploy:
     needs: build
