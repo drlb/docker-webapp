@@ -34,27 +34,9 @@ jobs:
       # Add deploy steps here
       - name: Copy deployment package to Nginx server container
         run: docker cp /home/wauser/deploy.zip web_app-web_app_server-1:/usr/share/nginx/html/deploy.zip
-      # - name: Copy deployment package to Nginx server container
-      #   uses: appleboy/scp-action@master
-      #   with:
-      #     host: ${{ secrets.NGINX_HOST }}
-      #     username: ${{ secrets.NGINX_USERNAME }}
-      #     password: ${{ secrets.NGINX_PASSWORD }}
-      #     source: deploy.zip
-      #     target: /usr/share/nginx/html/deploy.zip
 
-      # - name: Extract deployment package on Nginx server container
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.NGINX_HOST }}
-      #     username: ${{ secrets.NGINX_USERNAME }}
-      #     password: ${{ secrets.NGINX_PASSWORD }}
-      #     script: cd /usr/share/nginx/html && unzip -o deploy.zip -d /usr/share/nginx/html
+      - name: Extract deployment package on Nginx server container
+        run: docker unzip -o /usr/share/nginx/html/deploy.zip web_app-web_app_server-1:/usr/share/nginx/html/
       
-      # - name: Restart Nginx service
-      #   uses: appleboy/ssh-action@master
-      #   with:
-      #     host: ${{ secrets.NGINX_HOST }}
-      #     username: ${{ secrets.NGINX_USERNAME }}
-      #     password: ${{ secrets.NGINX_PASSWORD }}
-      #     script: sudo service nginx restart
+      - name: Restart Nginx service
+        run: sudo service nginx restart
