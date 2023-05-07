@@ -28,7 +28,7 @@ jobs:
         run: docker cp web_app-web_app_server-1:/home/node/app/deploy.zip /home/wauser/
 
   deploy:
-    needs: build
+    needs: build-and-test
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
