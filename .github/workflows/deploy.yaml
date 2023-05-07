@@ -16,7 +16,7 @@ jobs:
         run: docker build -t cygnetops/web-app-test -f Dockerfile.dev .
       
       - name: Run tests
-        run: docker run -e CI=true cygnetops/web-app-test npm run test
+        run: docker run --name web-app-test -e CI=true cygnetops/web-app-test npm run test
 
       - name: Create new build
         run: docker exec web-app-test npm run build
