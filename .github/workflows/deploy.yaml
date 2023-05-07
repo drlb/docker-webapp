@@ -34,7 +34,7 @@ jobs:
         run: docker build -t cygnetops/web-app-prod -f Dockerfile .
       
       - name: Build deployment package
-        run: docker run -it -d --name web-app-prod -e CI=true cygnetops/web-app-prod npm run build
+        run: docker run -d --name web-app-prod -e CI=true cygnetops/web-app-prod sh -c "while true; do sleep 1; done"
 
       - name: Copy deployment package to local machine
         run: docker cp web-app-prod:/app/deploy.zip /home/wauser/
