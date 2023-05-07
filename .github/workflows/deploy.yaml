@@ -4,7 +4,7 @@ on:
     branches: [master]
  
 jobs:
-  build:
+  build-and-test:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
@@ -16,11 +16,20 @@ jobs:
         run: docker build -t cygnetops/web-app-test -f Dockerfile.dev .
       
       - name: Run tests
-        run: docker run -e CI=true cygnetops/web-app-test npm test
+        run: docker run -e CI=true cygnetops/web-app-test npm run test
+        needs: build-docker-image
+
+      - name: Create new build
+        run: docker exec web-app-test npm run build
+        needs: run-tests
       
-      - name: Generate deployment package (zip)
-        run: zip -r /home/wauser/deploy.zip . -x '*.git*'
-    
+      - name: Generate deployment package zip file
+        run: docker exec web-app-test apt-get install zip && zip -r /home/node/app/deploy.zip /home/node/app/build -x '*.git*'
+        needs: create-new-build
+
+      - name: Copy deployment package to local machine
+        run: docker cp web_app-web_app_server-1:/home/node/app/deploy.zip /home/wauser/
+        needs: generate-deployment-package-zip-file
 
   deploy:
     needs: build
@@ -33,7 +42,7 @@ jobs:
       
       # Add deploy steps here
       - name: Copy deployment package to Nginx server container
-        run: docker cp /home/wauser/deploy.zip web_app-web_app_server-1:/usr/share/nginx/html/deploy.zip
+        run: docker cp /home/wauser/deploy.zip web_app-web_app_server-1:/usr/share/nginx/html/
 
       - name: Extract deployment package on Nginx server container
         run: docker exec web_app-web_app_server-1 unzip -o /usr/share/nginx/html/deploy.zip -d /usr/share/nginx/html/
