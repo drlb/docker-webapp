@@ -7,7 +7,8 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          dsfsdfsdfs1241245
+          Welcome!!
+          THIS IS MY NEW WEB APP :)
         </p>
         <a
           className="App-link"
