@@ -36,7 +36,7 @@ jobs:
         run: docker cp /home/wauser/deploy.zip web_app-web_app_server-1:/usr/share/nginx/html/deploy.zip
 
       - name: Extract deployment package on Nginx server container
-        run: docker unzip -o /usr/share/nginx/html/deploy.zip web_app-web_app_server-1:/usr/share/nginx/html/
+        run: docker exec web_app-web_app_server-1 unzip -o /usr/share/nginx/html/deploy.zip -d /usr/share/nginx/html/
       
       - name: Restart Nginx service
         run: sudo service nginx restart
