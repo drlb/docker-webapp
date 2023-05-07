@@ -36,8 +36,8 @@ jobs:
         uses: appleboy/scp-action@master
         with:
           host: ${{ secrets.NGINX_HOST }}
-          # username: ${{ secrets.NGINX_USERNAME }}
-          # password: ${{ secrets.NGINX_PASSWORD }}
+          username: ${{ secrets.NGINX_USERNAME }}
+          password: ${{ secrets.NGINX_PASSWORD }}
           source: deploy.zip
           target: /path/to/deploy.zip
 
@@ -45,8 +45,8 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.NGINX_HOST }}
-          # username: ${{ secrets.NGINX_USERNAME }}
-          # password: ${{ secrets.NGINX_PASSWORD }}
+          username: ${{ secrets.NGINX_USERNAME }}
+          password: ${{ secrets.NGINX_PASSWORD }}
           script: |
             cd /usr/share/nginx/html
             unzip -o deploy.zip -d /usr/share/nginx/html
@@ -55,7 +55,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.NGINX_HOST }}
-          # username: ${{ secrets.NGINX_USERNAME }}
-          # password: ${{ secrets.NGINX_PASSWORD }}
+          username: ${{ secrets.NGINX_USERNAME }}
+          password: ${{ secrets.NGINX_PASSWORD }}
           script: |
             sudo service nginx restart
