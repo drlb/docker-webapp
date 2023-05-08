@@ -8,7 +8,6 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Welcome!!
-          THIS IS MY NEW WEB APP :)
           <br></br>
           <button>Click here</button>
         </p>
