@@ -2,7 +2,7 @@ name: Deploy Web App
 on:
   pull_request_target:
     types: [assigned, opened, synchronize, reopened]
-    branches: [feature]
+    branches: [feature2]
   push:
     branches: [master]
  
