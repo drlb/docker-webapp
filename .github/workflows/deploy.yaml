@@ -57,6 +57,3 @@ jobs:
 
       - name: Extract deployment package on Nginx server container
         run: docker exec web_app-web_app_server-1 unzip -o /usr/share/nginx/html/deploy.zip -d /usr/share/nginx/html/
-      
-      - name: Restart Nginx service
-        run: docker exec web_app-web_app_server-1 service nginx restart
