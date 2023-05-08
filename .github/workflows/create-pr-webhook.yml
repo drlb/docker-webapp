@@ -20,3 +20,49 @@ jobs:
       
       - name: Remove temporary web app test container
         run: docker stop web-app-test && docker rm web-app-test
+  
+  build:
+    runs-on: self-hosted
+    needs: test
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin docker.io
+      
+      - name: Build Docker image
+        run: docker build -t cygnetops/web-app-prod -f Dockerfile .
+      
+      - name: Build deployment package
+        run: docker run -d --name web-app-prod -e CI=true cygnetops/web-app-prod sh -c "while true; do sleep 1; done"
+
+      - name: Copy deployment package to local machine
+        run: docker cp web-app-prod:/app/deploy.zip /home/wauser/
+      
+      - name: Remove temporary web app prod container
+        run: docker stop web-app-prod && docker rm web-app-prod
+  
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin docker.io
+      
+      - name: Build Docker image
+        run: docker build -t cygnetops/web-app-server -f Dockerfile .
+
+      - name: Build deployment package
+        run: docker run -d --name web-app-server -e CI=true cygnetops/web-app-server sh -c "while true; do sleep 1; done"
+
+      # Add deploy steps here
+      - name: Copy deployment package to Nginx server container
+        run: docker cp /home/wauser/deploy.zip web-app-server:/usr/share/nginx/html/
+
+      - name: Extract deployment package on Nginx server container
+        run: docker exec web-app-server unzip -o /usr/share/nginx/html/deploy.zip -d /usr/share/nginx/html/
+
+      - name: Remove temporary web app prod container
+        run: docker stop web-app-server && docker rm web-app-server
