@@ -1,0 +1,22 @@
+name: Testing Web App
+on:
+  pull_request:
+    types: [assigned, opened, synchronize, reopened]
+ 
+jobs:
+  test:
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login --username "${{ secrets.DOCKER_USERNAME }}" --password-stdin docker.io
+      
+      - name: Build Docker image
+        run: docker build -t cygnetops/web-app-test -f Dockerfile.dev .
+      
+      - name: Run tests
+        run: docker run --name web-app-test -e CI=true cygnetops/web-app-test npm run test
+      
+      - name: Remove temporary web app test container
+        run: docker stop web-app-test && docker rm web-app-test
