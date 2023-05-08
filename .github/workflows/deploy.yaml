@@ -5,6 +5,7 @@ on:
  
 jobs:
   test:
+    using: 'node16'
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
@@ -22,6 +23,7 @@ jobs:
         run: docker stop web-app-test && docker rm web-app-test
   
   build:
+    using: 'node16'
     runs-on: self-hosted
     needs: test
     steps:
@@ -43,6 +45,7 @@ jobs:
         run: docker stop web-app-prod && docker rm web-app-prod
   
   deploy:
+    using: 'node16'
     needs: build
     runs-on: self-hosted
     steps:
@@ -59,4 +62,4 @@ jobs:
         run: docker exec web_app-web_app_server-1 unzip -o /usr/share/nginx/html/deploy.zip -d /usr/share/nginx/html/
       
       - name: Restart Nginx service
-        run: sudo service nginx restart
+        run: docker exec web_app-web_app_server-1sudo service nginx restart
